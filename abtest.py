@@ -41,7 +41,7 @@ def current_block(cfg: dict, now: datetime) -> int:
     >= total_blocks — уже закончился."""
     start = cfg["test"]["start_dt"]
     d = int(cfg["test"]["block_days"])
-    if now < start:
+    if start is None or now < start:
         return -1
     return int((now - start).total_seconds() // (d * 86400))
 

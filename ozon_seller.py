@@ -17,14 +17,17 @@ import time
 
 import requests
 
-from common import require_env
+from common import ozon_creds
 
 BASE = "https://api-seller.ozon.ru"
 
 
 def _headers() -> dict:
-    client_id, api_key = require_env("OZON_CLIENT_ID", "OZON_API_KEY")
-    return {"Client-Id": client_id, "Api-Key": api_key, "Content-Type": "application/json"}
+    c = ozon_creds()
+    if not c["client_id"] or not c["api_key"]:
+        raise SystemExit("Не заданы ключи Seller API (раздел «Подключение»)")
+    return {"Client-Id": str(c["client_id"]), "Api-Key": c["api_key"],
+            "Content-Type": "application/json"}
 
 
 def _post(path: str, body: dict, retries: int = 3) -> dict:

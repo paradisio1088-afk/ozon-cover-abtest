@@ -11,7 +11,7 @@ import sys
 from collections import defaultdict
 
 from abtest import block_order, current_block, finish_dt, load_state
-from common import ROOT, load_config, now_msk
+from common import ROOT, load_config, now_msk, require_ready
 from collect import DAILY_CSV
 from stats import (chi_square_ctr, required_views_per_variant,
                    two_proportion_ztest)
@@ -31,6 +31,7 @@ def _read_daily() -> list[dict]:
 
 
 def compute_results(cfg: dict, state: dict | None = None) -> dict:
+    require_ready(cfg)
     rows = [r for r in _read_daily() if r["counted"] == "1"]
     n_var = cfg["test"]["n_variants"]
 

@@ -3,3 +3,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# всё рабочее состояние и секреты — только локально
+data/*
+!data/.gitkeep
+report.md

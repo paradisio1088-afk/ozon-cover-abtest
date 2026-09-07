@@ -16,7 +16,7 @@ from datetime import datetime
 
 import requests
 
-from common import require_env
+from common import ozon_creds
 
 BASE = "https://api-performance.ozon.ru"
 
@@ -26,10 +26,12 @@ _token_cache: dict = {"value": None, "exp": 0.0}
 def get_token() -> str:
     if _token_cache["value"] and time.time() < _token_cache["exp"] - 60:
         return _token_cache["value"]
-    client_id, client_secret = require_env("OZON_PERF_CLIENT_ID", "OZON_PERF_CLIENT_SECRET")
+    c = ozon_creds()
+    if not c["perf_client_id"] or not c["perf_client_secret"]:
+        raise SystemExit("Не заданы ключи Performance API (раздел «Подключение»)")
     resp = requests.post(
         f"{BASE}/api/client/token",
-        json={"client_id": client_id, "client_secret": client_secret,
+        json={"client_id": c["perf_client_id"], "client_secret": c["perf_client_secret"],
               "grant_type": "client_credentials"},
         timeout=30,
     )

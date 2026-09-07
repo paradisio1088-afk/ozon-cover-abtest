@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 from abtest import (block_order, current_block, effective_window, finish_dt,
                     load_state, switch_time_for_block)
-from common import DATA_DIR, MSK, load_config, now_msk
+from common import DATA_DIR, MSK, load_config, now_msk, require_ready
 from ozon_performance import fetch_daily
 
 DAILY_CSV = DATA_DIR / "daily.csv"
@@ -29,6 +29,7 @@ def _daterange(d1: datetime, d2: datetime):
 
 
 def collect(cfg: dict) -> list[dict]:
+    require_ready(cfg)
     state = load_state()
     n_var = cfg["test"]["n_variants"]
     start = cfg["test"]["start_dt"]

@@ -19,6 +19,9 @@ def main() -> int:
     b = current_block(cfg, now)
 
     print(f"Тест «{cfg['test']['name']}»  ·  сейчас {now:%Y-%m-%d %H:%M} МСК")
+    if not cfg["test"].get("start_dt"):
+        print("Статус: не запущен (нет даты старта — задай в интерфейсе)")
+        return 0
     print(f"Старт {cfg['test']['start']}  ·  конец {finish_dt(cfg):%Y-%m-%d %H:%M}  ·  "
           f"{len(order)} блоков × {cfg['test']['block_days']} дн.\n")
 
