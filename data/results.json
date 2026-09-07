@@ -3,12 +3,12 @@
     {
       "variant_index": 0,
       "variant_name": "шляпа",
-      "views": 0,
-      "clicks": 0,
-      "ctr": 0.0,
-      "spend": 0.0,
+      "views": 116,
+      "clicks": 4,
+      "ctr": 0.034482758620689655,
+      "spend": 10.97,
       "orders": 0,
-      "blocks": 0
+      "blocks": 1
     },
     {
       "variant_index": 1,
@@ -56,16 +56,23 @@
   "omnibus": {
     "chi2": 0.0,
     "df": 2,
-    "p_value": 1.0
+    "p_value": 0.9961696194324103
   },
-  "cycles": [],
-  "by_cycle": {},
+  "cycles": [
+    0
+  ],
+  "by_cycle": {
+    "0|0": {
+      "views": 116,
+      "clicks": 4
+    }
+  },
   "significant": false,
-  "consistent": false,
+  "consistent": true,
   "enough_data": false,
   "winner": null,
   "needed_views_per_variant": 0,
-  "total_views": 0,
-  "total_clicks": 0,
-  "updated_at": "2026-09-07T21:44:23+03:00"
+  "total_views": 116,
+  "total_clicks": 4,
+  "updated_at": "2026-09-07T22:10:54+03:00"
 }
