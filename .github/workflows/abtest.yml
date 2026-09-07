@@ -1,0 +1,54 @@
+name: ozon-cover-abtest
+
+# Автономный прогон в облаке GitHub — Mac можно выключать.
+# Раз в ~15 минут: ротация обложки + снимок статистики + пересчёт отчёта.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      rotate_only:
+        description: "Только ротация, без сбора статистики"
+        type: boolean
+        default: false
+
+concurrency:
+  group: ozon-cover-abtest
+  cancel-in-progress: false
+
+permissions:
+  contents: write        # чтобы коммитить data/*, report.md обратно
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -r requirements.txt
+
+      - name: worker
+        env:
+          OZON_CLIENT_ID: ${{ secrets.OZON_CLIENT_ID }}
+          OZON_API_KEY: ${{ secrets.OZON_API_KEY }}
+          OZON_PERF_CLIENT_ID: ${{ secrets.OZON_PERF_CLIENT_ID }}
+          OZON_PERF_CLIENT_SECRET: ${{ secrets.OZON_PERF_CLIENT_SECRET }}
+        run: |
+          if [ "${{ inputs.rotate_only }}" = "true" ]; then
+            python worker.py --rotate-only
+          else
+            python worker.py
+          fi
+
+      - name: commit state
+        run: |
+          git config user.name "abtest-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A data report.md 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "abtest $(date -u +%FT%TZ)"
+          git push || true
