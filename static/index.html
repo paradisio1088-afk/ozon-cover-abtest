@@ -72,8 +72,10 @@
       <div><label>Performance API · Client-Secret</label><input type="password" id="s_perf_client_secret"></div>
     </div>
     <div class="row">
-      <div><label>GitHub репозиторий для фото (owner/repo, приватный)</label><input type="text" id="s_github_repo" placeholder="username/ozon-covers"></div>
-      <div><label>GitHub токен (Contents: write)</label><input type="password" id="s_github_token" placeholder="github_pat_…"></div>
+      <div><label>Ключ ImgBB (для хостинга фото) —
+        <a href="https://api.imgbb.com/" target="_blank">получить</a></label>
+        <input type="password" id="s_imgbb_key" placeholder="32 символа"></div>
+      <div></div>
     </div>
     <div class="btnrow">
       <button onclick="saveSecrets()">Сохранить ключи</button>
@@ -111,7 +113,7 @@
 
   <div class="card" id="c-photos">
     <h2>4. Варианты обложки</h2>
-    <p class="hint">До 8 вариантов. Первый в списке — базовый (текущая обложка). Файлы загружаются в твой GitHub и раздаются через CDN.</p>
+    <p class="hint">До 8 вариантов. Первый в списке — базовый (текущая обложка). Файлы загружаются на ImgBB, ссылку скачивает Ozon.</p>
     <input type="file" id="files" accept="image/*" multiple>
     <div class="btnrow">
       <button onclick="uploadPhotos(false)">Добавить выбранные</button>
