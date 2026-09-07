@@ -28,7 +28,7 @@ def take_snapshot(cfg: dict | None = None) -> int:
     today = now_msk()
     d_from = (today - timedelta(days=1)).strftime("%Y-%m-%d")
     d_to = today.strftime("%Y-%m-%d")
-    daily = fetch_daily(campaigns, d_from, d_to)   # {date: {views,clicks,spend,orders}}
+    daily = fetch_daily(campaigns, d_from, d_to, sku=cfg["test"].get("sku") or None)
 
     now = utcnow_iso()
     rows = []

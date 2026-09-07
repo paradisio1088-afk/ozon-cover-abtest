@@ -31,6 +31,7 @@ DEFAULT_CONFIG = {
     "name": "cover-ctr",
     "product_id": 0,
     "offer_id": "",
+    "sku": "",                       # Ozon SKU товара — для фильтра статистики рекламы
     "campaign_ids": [],
     "start": "",                      # 'YYYY-MM-DDTHH:MM' МСК; пусто = тест не запущен
     "block_minutes": 360,             # длина блока показа варианта (360 = 6 часов)

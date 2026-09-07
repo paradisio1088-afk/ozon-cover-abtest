@@ -133,12 +133,20 @@ def act_check(_: dict) -> dict:
 
 
 def act_product(body: dict) -> dict:
-    from ozon_seller import get_images, resolve_product_id
+    from ozon_seller import get_product_info, resolve_product_id
     offer = str(body.get("offer_id", "")).strip()
     pid = int(body["product_id"]) if body.get("product_id") else resolve_product_id(offer)
-    images, primary = get_images(pid)
-    save_config({"product_id": pid, "offer_id": offer})
-    return {"product_id": pid, "offer_id": offer, "current_cover": primary, "images": images}
+    info = get_product_info(pid)
+    images = list(info.get("images") or [])
+    primary = info.get("primary_image") or (images[0] if images else "")
+    if isinstance(primary, list):
+        primary = primary[0] if primary else ""
+    if primary and primary not in images:
+        images = [primary] + images
+    sku = str(info.get("sku") or "")
+    save_config({"product_id": pid, "offer_id": info.get("offer_id") or offer, "sku": sku})
+    return {"product_id": pid, "offer_id": info.get("offer_id") or offer, "sku": sku,
+            "current_cover": primary, "images": images}
 
 
 def act_campaigns(_: dict) -> dict:
