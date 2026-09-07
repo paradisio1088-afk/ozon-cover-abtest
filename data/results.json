@@ -2,7 +2,7 @@
   "ranked": [
     {
       "variant_index": 0,
-      "variant_name": "O1CN01fSJpa62EBPAfsOJFm_!!2457958706-0-cib",
+      "variant_name": "шляпа",
       "views": 0,
       "clicks": 0,
       "ctr": 0.0,
@@ -12,7 +12,7 @@
     },
     {
       "variant_index": 1,
-      "variant_name": "O1CN01IuiAMo2EBPAftAAzx_!!2457958706-0-cib",
+      "variant_name": "стоя",
       "views": 0,
       "clicks": 0,
       "ctr": 0.0,
@@ -22,7 +22,7 @@
     },
     {
       "variant_index": 2,
-      "variant_name": "O1CN01JYWc7s2EBPAdohzvY_!!2457958706-0-cib",
+      "variant_name": "лежа",
       "views": 0,
       "clicks": 0,
       "ctr": 0.0,
@@ -33,7 +33,7 @@
   ],
   "comparisons": [
     {
-      "vs": "O1CN01IuiAMo2EBPAftAAzx_!!2457958706-0-cib",
+      "vs": "стоя",
       "vs_index": 1,
       "diff": 0.0,
       "p_value": 1.0,
@@ -43,7 +43,7 @@
       ]
     },
     {
-      "vs": "O1CN01JYWc7s2EBPAdohzvY_!!2457958706-0-cib",
+      "vs": "лежа",
       "vs_index": 2,
       "diff": 0.0,
       "p_value": 1.0,
@@ -67,5 +67,5 @@
   "needed_views_per_variant": 0,
   "total_views": 0,
   "total_clicks": 0,
-  "updated_at": "2026-09-07T21:19:50+03:00"
+  "updated_at": "2026-09-07T21:44:23+03:00"
 }
