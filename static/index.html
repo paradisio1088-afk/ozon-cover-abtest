@@ -52,6 +52,13 @@
   pre.log{background:#0d1117;color:#c9d1d9;padding:12px;border-radius:8px;font-size:11.5px;
     overflow:auto;max-height:220px}
   .verdict{font-size:14px;padding:12px 14px;border-radius:8px;background:#eaf1ff;margin-top:12px}
+  details.explain{margin:0 0 14px;border:1px solid var(--line);border-radius:8px;background:#fafbfc}
+  details.explain>summary{cursor:pointer;padding:8px 12px;font-size:12.5px;font-weight:600;color:var(--accent)}
+  details.explain[open]>summary{border-bottom:1px solid var(--line)}
+  details.explain dl{margin:0;padding:10px 14px}
+  details.explain dt{font-weight:600;font-size:12.5px;margin-top:10px}
+  details.explain dt:first-child{margin-top:0}
+  details.explain dd{margin:2px 0 0;font-size:12.5px;color:var(--muted);line-height:1.5}
   .muted{color:var(--muted)} .mono{font-variant-numeric:tabular-nums}
   a{color:var(--accent)}
 </style>
@@ -126,8 +133,40 @@
 
   <div class="card" id="c-params">
     <h2>5. Параметры теста</h2>
+    <details class="explain">
+      <summary>Что означают параметры</summary>
+      <dl>
+        <dt>Длина блока показа варианта</dt>
+        <dd>Сколько времени висит один вариант обложки, прежде чем приложение поставит
+          следующий. Например 6 часов: A — 6ч, потом B — 6ч, потом C — 6ч и т.д.
+          Короткие блоки (меньше ~6 ч) — быстрее, но статистика рекламы Ozon
+          запаздывает на 1–3 часа, поэтому показы могут приписаться не тому варианту.</dd>
+        <dt>Циклов ротации</dt>
+        <dd>Сколько раз пройти по всем вариантам. Один цикл = один проход A→B→C→…
+          Зачем больше одного: чтобы победитель победил не по случайности. Если A
+          крутился вечером (много трафика), а B ночью — сравнивать нечестно. За
+          несколько циклов каждый вариант успевает поработать и утром, и вечером.
+          В отчёте проверяется, что лидер выигрывает во всех циклах. 2 — минимум,
+          3 — надёжнее, но дольше.</dd>
+        <dt>Пропускать в начале блока, минут</dt>
+        <dd>После смены обложки новая картинка появляется в поиске и рекламе не сразу
+          (Ozon обновляет выдачу и кэш), плюс задержка статистики. Поэтому первые
+          N минут блока в расчёт CTR не берутся — считаются только показы после
+          «прогрева». Для блока 6 ч и значения 60: 1 час пропускаем, 5 часов меряем.</dd>
+        <dt>Мин. показов на вариант</dt>
+        <dd>Порог, ниже которого приложение не делает вывод о победителе — слишком
+          мало данных, чтобы верить разнице в CTR. 100 — самый минимум для грубой
+          прикидки, 1000+ — для реального решения.</dd>
+        <dt>Перемешивать порядок в циклах</dt>
+        <dd>Первый цикл идёт в порядке из списка вариантов, последующие — в случайном
+          (но воспроизводимом). Так эффект обложки отделяется от времени суток.</dd>
+        <dt>Автоматически поставить победителя</dt>
+        <dd>Когда тест закончится и разница будет значимой — приложение само поставит
+          обложку-победителя. Выключено: только покажет в отчёте, ставишь сам.</dd>
+      </dl>
+    </details>
     <div class="row">
-      <div><label>Длина блока показа варианта</label>
+      <div><label title="Сколько времени висит один вариант обложки перед сменой на следующий">Длина блока показа варианта</label>
         <div style="display:flex;gap:6px">
           <input type="number" id="p_block_val" min="1" value="6" style="flex:1">
           <select id="p_block_unit" style="flex:0 0 90px">
@@ -136,13 +175,13 @@
             <option value="days">дней</option>
           </select>
         </div></div>
-      <div><label>Циклов ротации</label><input type="number" id="p_cycles" min="1" max="6" value="2"></div>
-      <div><label>Пропускать в начале блока, минут</label><input type="number" id="p_settle_min" min="0" step="5" value="60"></div>
+      <div><label title="Сколько раз пройти по всем вариантам. Больше циклов — надёжнее вывод (проверяется, что лидер стабилен), но дольше">Циклов ротации</label><input type="number" id="p_cycles" min="1" max="6" value="2"></div>
+      <div><label title="После смены обложки новая картинка появляется не сразу. Первые N минут блока не учитываются в CTR">Пропускать в начале блока, минут</label><input type="number" id="p_settle_min" min="0" step="5" value="60"></div>
     </div>
     <div class="row">
-      <div><label>Мин. показов на вариант (для вывода)</label><input type="number" id="p_min_impr" min="100" step="100" value="1000"></div>
-      <div><label style="margin-top:10px"><input type="checkbox" id="p_shuffle" checked style="width:auto"> перемешивать порядок в циклах после первого</label>
-        <label><input type="checkbox" id="p_apply_winner" style="width:auto"> в конце автоматически поставить победителя</label></div>
+      <div><label title="Ниже этого порога показов приложение не делает вывод о победителе — мало данных">Мин. показов на вариант (для вывода)</label><input type="number" id="p_min_impr" min="100" step="100" value="1000"></div>
+      <div><label style="margin-top:10px" title="Первый цикл — в порядке из списка, дальше случайный порядок. Отделяет эффект обложки от времени суток"><input type="checkbox" id="p_shuffle" checked style="width:auto"> перемешивать порядок в циклах после первого</label>
+        <label title="По окончании теста при значимой разнице сам поставит обложку-победителя"><input type="checkbox" id="p_apply_winner" style="width:auto"> в конце автоматически поставить победителя</label></div>
     </div>
     <p class="hint" style="margin:8px 0 0">Статистика рекламы Ozon обновляется с задержкой ~1–3 ч. Блоки короче ~6 часов дают менее точную привязку показов к варианту.</p>
     <div class="btnrow"><button onclick="saveParams()">Сохранить параметры</button></div>
