@@ -23,7 +23,7 @@ def main() -> int:
         print("Статус: не запущен (нет даты старта — задай в интерфейсе)")
         return 0
     print(f"Старт {cfg['test']['start']}  ·  конец {finish_dt(cfg):%Y-%m-%d %H:%M}  ·  "
-          f"{len(order)} блоков × {cfg['test']['block_days']} дн.\n")
+          f"{len(order)} блоков × {cfg['test']['block_minutes']} мин.\n")
 
     if b < 0:
         print("Статус: ещё не начался")

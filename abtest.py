@@ -8,7 +8,7 @@ import random
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-from common import DATA_DIR, MSK, msk_date, utcnow_iso
+from common import DATA_DIR, MSK, utcnow_iso
 
 STATE_PATH = DATA_DIR / "state.json"
 
@@ -30,20 +30,23 @@ def block_order(cfg: dict) -> list[int]:
     return order
 
 
+def block_len(cfg: dict) -> timedelta:
+    return timedelta(minutes=int(cfg["test"]["block_minutes"]))
+
+
 def block_bounds(cfg: dict, block: int) -> tuple[datetime, datetime]:
     start = cfg["test"]["start_dt"]
-    d = int(cfg["test"]["block_days"])
-    return start + timedelta(days=d * block), start + timedelta(days=d * (block + 1))
+    d = block_len(cfg)
+    return start + d * block, start + d * (block + 1)
 
 
 def current_block(cfg: dict, now: datetime) -> int:
     """Номер блока для момента now. <0 — тест ещё не начался,
     >= total_blocks — уже закончился."""
     start = cfg["test"]["start_dt"]
-    d = int(cfg["test"]["block_days"])
     if start is None or now < start:
         return -1
-    return int((now - start).total_seconds() // (d * 86400))
+    return int((now - start) / block_len(cfg))
 
 
 def target_variant(cfg: dict, now: datetime) -> int | None:
@@ -57,12 +60,16 @@ def target_variant(cfg: dict, now: datetime) -> int | None:
 def measurement_start(cfg: dict, block: int) -> datetime:
     """С какого момента блок можно засчитывать в статистику."""
     b0, _ = block_bounds(cfg, block)
-    return b0 + timedelta(hours=float(cfg["test"]["settle_hours"]))
+    return b0 + timedelta(minutes=float(cfg["test"]["settle_minutes"]))
 
 
 def finish_dt(cfg: dict) -> datetime:
     _, end = block_bounds(cfg, cfg["test"]["total_blocks"] - 1)
     return end
+
+
+def _fmt(dt: datetime) -> str:
+    return dt.astimezone(MSK).strftime("%d.%m %H:%M")
 
 
 def schedule_table(cfg: dict) -> list[dict]:
@@ -71,10 +78,10 @@ def schedule_table(cfg: dict) -> list[dict]:
     for b, vi in enumerate(order):
         b0, b1 = block_bounds(cfg, b)
         rows.append({
-            "block": b, "cycle": b // cfg["test"]["n_variants"],
+            "block": b, "cycle": b // max(cfg["test"]["n_variants"], 1),
             "variant_index": vi, "variant_name": cfg["variants"][vi]["name"],
-            "from": msk_date(b0), "to": msk_date(b1 - timedelta(seconds=1)),
-            "measure_from": msk_date(measurement_start(cfg, b)),
+            "from": _fmt(b0), "to": _fmt(b1),
+            "measure_from": _fmt(measurement_start(cfg, b)),
         })
     return rows
 
@@ -126,6 +133,6 @@ def effective_window(cfg: dict, state: dict, block: int) -> Effective:
     actual_switch = switch_time_for_block(state, block)
     mf = planned
     if actual_switch is not None:
-        settle = timedelta(hours=float(cfg["test"]["settle_hours"]))
+        settle = timedelta(minutes=float(cfg["test"]["settle_minutes"]))
         mf = max(planned, actual_switch + settle)
     return Effective(block=block, variant_index=order[block], measure_from=mf)

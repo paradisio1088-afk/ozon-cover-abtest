@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-"""Забирает дневную статистику рекламы и раскладывает по вариантам обложки.
-Результат — data/daily.csv (перезаписывается целиком каждый запуск).
+"""Раскладывает статистику рекламы по блокам ротации.
+
+Показы/клики за блок = разница снимков (snapshots.csv) на границах окна учёта
+блока. Окно = [конец переходного периода .. конец блока], но не позже
+последнего снимка. Результат — data/blocks.csv (перезаписывается целиком).
 
   python collect.py
 """
@@ -11,71 +14,97 @@ import csv
 import sys
 from datetime import datetime, timedelta
 
-from abtest import (block_order, current_block, effective_window, finish_dt,
-                    load_state, switch_time_for_block)
+from abtest import (block_bounds, block_order, effective_window, load_state,
+                    switch_time_for_block)
 from common import DATA_DIR, MSK, load_config, now_msk, require_ready
-from ozon_performance import fetch_daily
+from snapshot import load_snapshots
 
-DAILY_CSV = DATA_DIR / "daily.csv"
-FIELDS = ["date", "block", "cycle", "variant_index", "variant_name",
-          "views", "clicks", "spend", "orders", "counted", "reason"]
+BLOCKS_CSV = DATA_DIR / "blocks.csv"
+FIELDS = ["block", "cycle", "variant_index", "variant_name",
+          "views", "clicks", "spend", "orders", "window_from", "window_to",
+          "partial", "counted", "reason"]
+METRICS = ("views", "clicks", "spend", "orders")
 
 
-def _daterange(d1: datetime, d2: datetime):
-    cur = d1
-    while cur <= d2:
-        yield cur
-        cur += timedelta(days=1)
+def _day_key(dt: datetime) -> str:
+    return dt.astimezone(MSK).strftime("%Y-%m-%d")
+
+
+def _cumulative(snaps_by_day: dict[str, list[dict]], day: str, t: datetime) -> dict:
+    """Накопленные метрики за дату day на момент t (последний снимок <= t)."""
+    best = None
+    for s in snaps_by_day.get(day, []):
+        if datetime.fromisoformat(s["at_utc"]) <= t:
+            best = s
+        else:
+            break
+    if best is None:
+        return {m: 0.0 for m in METRICS}
+    return {m: float(best[m]) for m in METRICS}
+
+
+def _traffic_between(snaps_by_day: dict, w0: datetime, w1: datetime) -> dict:
+    """Суммарные метрики за интервал [w0, w1] (МСК), с учётом сброса счётчика в полночь."""
+    total = {m: 0.0 for m in METRICS}
+    if w1 <= w0:
+        return total
+    cur = w0
+    while cur < w1:
+        day = _day_key(cur)
+        midnight_next = (cur.astimezone(MSK).replace(hour=0, minute=0, second=0, microsecond=0)
+                         + timedelta(days=1))
+        seg_end = min(w1, midnight_next)
+        a = _cumulative(snaps_by_day, day, cur)
+        b = _cumulative(snaps_by_day, day, seg_end)
+        for m in METRICS:
+            total[m] += max(b[m] - a[m], 0.0)
+        cur = seg_end
+    return total
 
 
 def collect(cfg: dict) -> list[dict]:
     require_ready(cfg)
     state = load_state()
-    n_var = cfg["test"]["n_variants"]
-    start = cfg["test"]["start_dt"]
-    yesterday = (now_msk() - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-    end = min(yesterday, finish_dt(cfg))
-    if end < start:
-        print("Пока нет завершённых суток теста.")
+    n_var = max(cfg["test"]["n_variants"], 1)
+    order = block_order(cfg)
+
+    snaps = load_snapshots()
+    if not snaps:
+        print("Пока нет снимков статистики (snapshots.csv). Запусти worker.py позже.")
         return []
+    snaps_by_day: dict[str, list[dict]] = {}
+    for s in sorted(snaps, key=lambda r: r["at_utc"]):
+        snaps_by_day.setdefault(s["date"], []).append(s)
+    last_snap = max(datetime.fromisoformat(s["at_utc"]) for s in snaps).astimezone(MSK)
 
-    campaigns = [str(c) for c in cfg["test"]["campaign_ids"]]
-    if not campaigns:
-        raise SystemExit("В config.toml не заданы test.campaign_ids")
-
-    daily = fetch_daily(campaigns, start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d"))
-
+    now = now_msk()
     rows: list[dict] = []
-    for day_dt in _daterange(start.replace(hour=0, minute=0), end):
-        dstr = day_dt.strftime("%Y-%m-%d")
-        metrics = daily.get(dstr, {"views": 0, "clicks": 0, "spend": 0, "orders": 0})
+    for b, vi in enumerate(order):
+        b0, b1 = block_bounds(cfg, b)
+        if b0 > now:
+            break
+        eff = effective_window(cfg, state, b)
+        w0 = eff.measure_from
+        w1 = min(b1, last_snap)
+        partial = b1 > last_snap or b1 > now
 
-        noon = day_dt.replace(hour=12, tzinfo=MSK)
-        block = current_block(cfg, noon)
-        order = block_order(cfg)
-
-        counted, reason, vi = False, "", -1
-        if block < 0 or block >= len(order):
-            reason = "вне периода теста"
+        counted, reason = False, ""
+        if b > 0 and switch_time_for_block(state, b) is None:
+            reason = "ротация не отработала в этом блоке"
+        elif w1 <= w0:
+            reason = "переходный период ещё не кончился" if b1 > now else "нет данных за окно"
         else:
-            eff = effective_window(cfg, state, block)
-            vi = eff.variant_index
-            day_start = day_dt.replace(hour=0, tzinfo=MSK)
-            if block > 0 and switch_time_for_block(state, block) is None:
-                reason = "rotate.py не отработал в этом блоке"
-            elif day_start < eff.measure_from:
-                reason = "переходный период (settle)"
-            else:
-                counted, reason = True, "ok"
+            counted, reason = True, "ok"
 
+        t = _traffic_between(snaps_by_day, w0, w1) if counted else {m: 0.0 for m in METRICS}
         rows.append({
-            "date": dstr, "block": block if block >= 0 else "",
-            "cycle": (block // n_var) if 0 <= block < len(order) else "",
-            "variant_index": vi if vi >= 0 else "",
-            "variant_name": cfg["variants"][vi]["name"] if vi >= 0 else "",
-            "views": round(metrics["views"]), "clicks": round(metrics["clicks"]),
-            "spend": round(metrics["spend"], 2), "orders": round(metrics["orders"]),
-            "counted": int(counted), "reason": reason,
+            "block": b, "cycle": b // n_var,
+            "variant_index": vi, "variant_name": cfg["variants"][vi]["name"],
+            "views": round(t["views"]), "clicks": round(t["clicks"]),
+            "spend": round(t["spend"], 2), "orders": round(t["orders"]),
+            "window_from": w0.strftime("%d.%m %H:%M"),
+            "window_to": w1.strftime("%d.%m %H:%M") if counted else "—",
+            "partial": int(partial), "counted": int(counted), "reason": reason,
         })
     return rows
 
@@ -86,16 +115,16 @@ def main(argv: list[str]) -> int:
     if not rows:
         return 0
     DATA_DIR.mkdir(exist_ok=True)
-    with DAILY_CSV.open("w", newline="") as fh:
+    with BLOCKS_CSV.open("w", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=FIELDS)
         w.writeheader()
         w.writerows(rows)
 
     used = [r for r in rows if r["counted"]]
-    print(f"Собрано суток: {len(rows)}, зачтено в тест: {len(used)}")
+    print(f"Блоков пройдено: {len(rows)}, зачтено: {len(used)}")
     print(f"  показов зачтено: {sum(r['views'] for r in used)}, "
           f"кликов: {sum(r['clicks'] for r in used)}")
-    print(f"  -> {DAILY_CSV}")
+    print(f"  -> {BLOCKS_CSV}")
     return 0
 
 

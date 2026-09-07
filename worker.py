@@ -52,7 +52,19 @@ def run(rotate_only: bool = False) -> dict:
     if rotate_only:
         return summary
 
-    # 2. сбор статистики
+    # 2. снимок накопленной статистики
+    try:
+        import snapshot
+        n = snapshot.take_snapshot()
+        summary["steps"]["snapshot"] = f"ok ({n})"
+    except SystemExit as e:
+        summary["steps"]["snapshot"] = f"ошибка: {e}"
+        log(f"snapshot: {e}")
+    except Exception:
+        summary["steps"]["snapshot"] = "исключение"
+        log("snapshot ИСКЛЮЧЕНИЕ:\n" + traceback.format_exc())
+
+    # 3. раскладка по блокам
     try:
         import collect
         collect.main([])
@@ -64,7 +76,7 @@ def run(rotate_only: bool = False) -> dict:
         summary["steps"]["collect"] = "исключение"
         log("collect ИСКЛЮЧЕНИЕ:\n" + traceback.format_exc())
 
-    # 3. анализ
+    # 4. анализ
     try:
         import analyze
         acfg = load_config()

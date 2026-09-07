@@ -1,5 +1,5 @@
 #!/bin/bash
-# Ставит фоновую задачу ротации (launchd). Запускает worker.py каждые 30 минут,
+# Ставит фоновую задачу ротации (launchd). Запускает worker.py каждые 15 минут,
 # пока Mac включён. Логи — data/worker.log и data/launchd.*.log
 set -euo pipefail
 
@@ -22,7 +22,7 @@ cat > "$PLIST" <<EOF
     <string>$DIR/worker.py</string>
   </array>
   <key>WorkingDirectory</key><string>$DIR</string>
-  <key>StartInterval</key><integer>1800</integer>
+  <key>StartInterval</key><integer>900</integer>
   <key>RunAtLoad</key><true/>
   <key>StandardOutPath</key><string>$DIR/data/launchd.out.log</string>
   <key>StandardErrorPath</key><string>$DIR/data/launchd.err.log</string>

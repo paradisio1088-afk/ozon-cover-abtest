@@ -33,15 +33,19 @@ DEFAULT_CONFIG = {
     "offer_id": "",
     "campaign_ids": [],
     "start": "",                      # 'YYYY-MM-DDTHH:MM' МСК; пусто = тест не запущен
-    "block_days": 3,
+    "block_minutes": 360,             # длина блока показа варианта (360 = 6 часов)
     "cycles": 2,
-    "settle_hours": 24,
+    "settle_minutes": 60,             # сколько пропустить в начале блока (прогрев + подмена фото)
     "shuffle_each_cycle": True,
     "min_impressions_per_variant": 1000,
     "apply_winner_on_finish": False,
     "enabled": False,                # включает фоновую ротацию
     "variants": [],                  # [{name, url, filename, sha}]
 }
+
+# минимально допустимые значения (защита от совсем нерабочих настроек)
+MIN_BLOCK_MINUTES = 30
+MIN_IMPRESSIONS = 100
 
 
 # ─── секреты ─────────────────────────────────────────────────────────────────
@@ -106,6 +110,11 @@ def save_config(patch: dict) -> dict:
     for k, v in patch.items():
         if k in DEFAULT_CONFIG:
             cfg[k] = v
+    cfg["block_minutes"] = max(int(cfg.get("block_minutes") or 0), MIN_BLOCK_MINUTES)
+    cfg["settle_minutes"] = max(int(cfg.get("settle_minutes") or 0), 0)
+    cfg["cycles"] = max(int(cfg.get("cycles") or 1), 1)
+    cfg["min_impressions_per_variant"] = max(
+        int(cfg.get("min_impressions_per_variant") or 0), MIN_IMPRESSIONS)
     DATA_DIR.mkdir(exist_ok=True)
     CONFIG_PATH.write_text(json.dumps(cfg, ensure_ascii=False, indent=2))
     return cfg

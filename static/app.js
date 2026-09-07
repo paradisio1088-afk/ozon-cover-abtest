@@ -182,11 +182,30 @@ async function renameVariant(i, name) {
 }
 
 // ─── параметры ─────────────────────────────────────────────────────
+const UNIT_MIN = { minutes: 1, hours: 60, days: 1440 };
+
+function blockMinutesFromUI() {
+  return Math.max(1, Math.round(+$("p_block_val").value)) * UNIT_MIN[$("p_block_unit").value];
+}
+function setBlockUI(mins) {
+  mins = mins || 360;
+  let unit = "minutes";
+  if (mins % 1440 === 0) unit = "days";
+  else if (mins % 60 === 0) unit = "hours";
+  $("p_block_unit").value = unit;
+  $("p_block_val").value = mins / UNIT_MIN[unit];
+}
+function humanDur(mins) {
+  if (mins < 60) return `${mins} мин`;
+  if (mins < 1440) return `${(mins/60).toFixed(mins%60?1:0)} ч`;
+  return `${(mins/1440).toFixed(mins%1440?1:0)} сут`;
+}
+
 function renderParams() {
   const c = STATE.config;
-  $("p_block_days").value = c.block_days;
+  setBlockUI(c.block_minutes);
   $("p_cycles").value = c.cycles;
-  $("p_settle_hours").value = c.settle_hours;
+  $("p_settle_min").value = c.settle_minutes;
   $("p_min_impr").value = c.min_impressions_per_variant;
   $("p_shuffle").checked = !!c.shuffle_each_cycle;
   $("p_apply_winner").checked = !!c.apply_winner_on_finish;
@@ -194,24 +213,24 @@ function renderParams() {
 }
 function estimate() {
   const n = (STATE.config.variants || []).length || 5;
-  const d = +$("p_block_days").value, cy = +$("p_cycles").value;
-  const total = n * d * cy;
-  let box = $("params-msg");
+  const bm = blockMinutesFromUI(), cy = +$("p_cycles").value;
+  const total = n * bm * cy;
+  const box = $("params-msg");
   box.style.display = "block"; box.className = "msg info";
-  box.textContent = `${n} вариантов × ${d} дн × ${cy} цикла = ${total} дней теста` +
-    (total > 40 ? " — долго. Если рекламного трафика мало, лучше меньше вариантов." : "");
+  box.textContent = `${n} вар. × ${humanDur(bm)} × ${cy} цикла = ${humanDur(total)} теста` +
+    (bm < 360 ? "  ⚠ блок < 6 ч — привязка показов к варианту менее точна" : "");
 }
-["p_block_days","p_cycles"].forEach(id => $(id).addEventListener("input", estimate));
+["p_block_val","p_block_unit","p_cycles"].forEach(id => $(id).addEventListener("input", estimate));
 
 async function saveParams() {
   const body = {
-    block_days: +$("p_block_days").value, cycles: +$("p_cycles").value,
-    settle_hours: +$("p_settle_hours").value,
+    block_minutes: blockMinutesFromUI(), cycles: +$("p_cycles").value,
+    settle_minutes: +$("p_settle_min").value,
     min_impressions_per_variant: +$("p_min_impr").value,
     shuffle_each_cycle: $("p_shuffle").checked,
     apply_winner_on_finish: $("p_apply_winner").checked,
   };
-  try { const r = await api("/api/config", body); STATE.config = r.config;
+  try { const r = await api("/api/config", body); STATE.config = r.config; renderParams();
     msg("params-msg", "Параметры сохранены.", "ok"); }
   catch (e) { msg("params-msg", e.message, "err"); }
 }

@@ -12,7 +12,7 @@ from collections import defaultdict
 
 from abtest import block_order, current_block, finish_dt, load_state
 from common import ROOT, load_config, now_msk, require_ready
-from collect import DAILY_CSV
+from collect import BLOCKS_CSV
 from stats import (chi_square_ctr, required_views_per_variant,
                    two_proportion_ztest)
 
@@ -23,26 +23,26 @@ def _n(x) -> str:
     return f"{int(x):,}".replace(",", " ")
 
 
-def _read_daily() -> list[dict]:
-    if not DAILY_CSV.exists():
-        raise SystemExit("Нет data/daily.csv — сначала запусти python collect.py")
-    with DAILY_CSV.open(newline="") as fh:
+def _read_blocks() -> list[dict]:
+    if not BLOCKS_CSV.exists():
+        raise SystemExit("Нет data/blocks.csv — сначала запусти python collect.py")
+    with BLOCKS_CSV.open(newline="") as fh:
         return list(csv.DictReader(fh))
 
 
 def compute_results(cfg: dict, state: dict | None = None) -> dict:
     require_ready(cfg)
-    rows = [r for r in _read_daily() if r["counted"] == "1"]
+    rows = [r for r in _read_blocks() if r["counted"] == "1"]
     n_var = cfg["test"]["n_variants"]
 
-    agg = {i: {"views": 0, "clicks": 0, "spend": 0.0, "orders": 0, "days": 0}
+    agg = {i: {"views": 0, "clicks": 0, "spend": 0.0, "orders": 0, "blocks": 0}
            for i in range(n_var)}
     by_cycle: dict[tuple[int, int], dict] = defaultdict(lambda: {"views": 0, "clicks": 0})
     for r in rows:
         vi = int(r["variant_index"])
         a = agg[vi]
         a["views"] += int(r["views"]); a["clicks"] += int(r["clicks"])
-        a["spend"] += float(r["spend"]); a["orders"] += int(r["orders"]); a["days"] += 1
+        a["spend"] += float(r["spend"]); a["orders"] += int(r["orders"]); a["blocks"] += 1
         cy = int(r["cycle"])
         by_cycle[(vi, cy)]["views"] += int(r["views"])
         by_cycle[(vi, cy)]["clicks"] += int(r["clicks"])
@@ -54,7 +54,7 @@ def compute_results(cfg: dict, state: dict | None = None) -> dict:
         variants.append({
             "variant_index": i, "variant_name": cfg["variants"][i]["name"],
             "views": a["views"], "clicks": a["clicks"], "ctr": ctr,
-            "spend": a["spend"], "orders": a["orders"], "days": a["days"],
+            "spend": a["spend"], "orders": a["orders"], "blocks": a["blocks"],
         })
     ranked = sorted(variants, key=lambda v: v["ctr"], reverse=True)
 
@@ -153,12 +153,12 @@ def build_report(cfg: dict, res: dict) -> str:
     L.append(f"Зачтено показов: **{_n(res['total_views'])}**, кликов: **{_n(res['total_clicks'])}**\n")
 
     L.append("## Результаты по вариантам\n")
-    L.append("| # | Вариант | Показы | Клики | CTR | Заказы | Расход ₽ | Дней |")
+    L.append("| # | Вариант | Показы | Клики | CTR | Заказы | Расход ₽ | Блоков |")
     L.append("|---|---------|-------:|------:|----:|-------:|---------:|-----:|")
     for pos, v in enumerate(res["ranked"], 1):
         mark = " 🏆" if res["winner"] and v["variant_index"] == res["winner"]["variant_index"] else ""
         L.append(f"| {pos} | {v['variant_name']}{mark} | {_n(v['views'])} | {_n(v['clicks'])} | "
-                 f"{v['ctr']*100:.2f}% | {v['orders']} | {v['spend']:.0f} | {v['days']} |")
+                 f"{v['ctr']*100:.2f}% | {v['orders']} | {v['spend']:.0f} | {v['blocks']} |")
     L.append("")
 
     L.append("## Сравнение с лидером\n")

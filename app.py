@@ -185,7 +185,7 @@ def act_photos_rename(body: dict) -> dict:
 
 
 def act_config(body: dict) -> dict:
-    allowed = ("name", "campaign_ids", "block_days", "cycles", "settle_hours",
+    allowed = ("name", "campaign_ids", "block_minutes", "cycles", "settle_minutes",
                "shuffle_each_cycle", "min_impressions_per_variant", "apply_winner_on_finish")
     patch = {k: body[k] for k in allowed if k in body}
     if "campaign_ids" in patch:
@@ -212,8 +212,11 @@ def act_init_status(_: dict) -> dict:
             "ready": not missing, "total": len(cfg["variants"])}
 
 
-def _next_midnight_msk() -> str:
-    d = (now_msk() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+def _default_start_msk() -> str:
+    """Ближайшие ровные полчаса (+ небольшой запас), чтобы ротация стартовала скоро."""
+    n = now_msk() + timedelta(minutes=5)
+    add = (30 - n.minute % 30) % 30
+    d = (n + timedelta(minutes=add)).replace(second=0, microsecond=0)
     return d.strftime("%Y-%m-%dT%H:%M")
 
 
@@ -230,7 +233,7 @@ def act_test_start(body: dict) -> dict:
     if missing:
         raise SystemExit(f"Не все фото прошли модерацию в карточке ({len(missing)} осталось). "
                          f"Нажмите «Проверить готовность» позже.")
-    start = str(body.get("start", "")).strip() or _next_midnight_msk()
+    start = str(body.get("start", "")).strip() or _default_start_msk()
     from abtest import save_state
     save_state({"switches": [], "winner_applied": None})
     save_config({"start": start, "enabled": True})
@@ -246,7 +249,7 @@ def act_test_reset(_: dict) -> dict:
     from abtest import save_state
     save_state({"switches": [], "winner_applied": None})
     save_config({"start": "", "enabled": False})
-    for f in ("results.json", "daily.csv"):
+    for f in ("results.json", "blocks.csv", "snapshots.csv"):
         (DATA_DIR / f).unlink(missing_ok=True)
     (ROOT / "report.md").unlink(missing_ok=True)
     return {"status": status_block()}

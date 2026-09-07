@@ -61,7 +61,7 @@ def main(argv: list[str]) -> int:
     cfg = load_config()
     n = len(block_order(cfg))
     print(f"Тест «{cfg['test']['name']}»: {cfg['test']['n_variants']} вариантов, "
-          f"{n} блоков по {cfg['test']['block_days']} дн.\n")
+          f"{n} блоков по {cfg['test']['block_minutes']} мин.\n")
 
     if "--check" in argv:
         present, missing = status(cfg)
