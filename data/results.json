@@ -3,10 +3,10 @@
     {
       "variant_index": 0,
       "variant_name": "шляпа",
-      "views": 116,
-      "clicks": 4,
-      "ctr": 0.034482758620689655,
-      "spend": 10.97,
+      "views": 251,
+      "clicks": 7,
+      "ctr": 0.027888446215139442,
+      "spend": 30.83,
       "orders": 0,
       "blocks": 1
     },
@@ -63,8 +63,8 @@
   ],
   "by_cycle": {
     "0|0": {
-      "views": 116,
-      "clicks": 4
+      "views": 251,
+      "clicks": 7
     }
   },
   "significant": false,
@@ -72,7 +72,7 @@
   "enough_data": false,
   "winner": null,
   "needed_views_per_variant": 0,
-  "total_views": 116,
-  "total_clicks": 4,
-  "updated_at": "2026-09-07T22:10:54+03:00"
+  "total_views": 251,
+  "total_clicks": 7,
+  "updated_at": "2026-09-08T00:59:37+03:00"
 }
