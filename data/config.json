@@ -1,0 +1,34 @@
+{
+  "name": "cover-ctr",
+  "product_id": 5018943807,
+  "offer_id": "купальник слитный 2s",
+  "sku": "4671184750",
+  "campaign_ids": [
+    "29370469"
+  ],
+  "start": "2026-09-07T20:56",
+  "block_minutes": 360,
+  "cycles": 2,
+  "settle_minutes": 60,
+  "shuffle_each_cycle": true,
+  "min_impressions_per_variant": 1000,
+  "apply_winner_on_finish": true,
+  "enabled": true,
+  "variants": [
+    {
+      "name": "шляпа",
+      "url": "https://cdn.jsdelivr.net/gh/paradisio1088-afk/ozon-covers@177c6f1a4f863d65ac805cdcb2dcdda76e4f1f03/photos/04ffeac151ac.jpg",
+      "filename": "04ffeac151ac.jpg"
+    },
+    {
+      "name": "стоя",
+      "url": "https://cdn.jsdelivr.net/gh/paradisio1088-afk/ozon-covers@bfd3917a507f187ed378f3d84a26f71e71bf30f4/photos/3c70022b498a.jpg",
+      "filename": "3c70022b498a.jpg"
+    },
+    {
+      "name": "лежа",
+      "url": "https://cdn.jsdelivr.net/gh/paradisio1088-afk/ozon-covers@4228aa0fe568331801bcc2a7fcad346452405ab9/photos/cf3236255e4b.jpg",
+      "filename": "cf3236255e4b.jpg"
+    }
+  ]
+}

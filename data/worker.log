@@ -1,0 +1,6 @@
+2026-09-07T20:57:03  snapshot: Performance API daily 405: 
+2026-09-07T21:04:31  rotate: Картинки нет в карточке: https://cdn.jsdelivr.net/gh/paradisio1088-afk/ozon-covers@177c6f1a4f863d65ac805cdcb2dcdda76e4f1f03/photos/04ffeac151ac.jpg
+Сначала залей все варианты и дождись модерации: python init.py
+2026-09-07T21:04:36  итог: {"ran_at": "2026-09-07T21:04:31+03:00", "steps": {"rotate": "ошибка: Картинки нет в карточке: https://cdn.jsdelivr.net/gh/paradisio1088-afk/ozon-covers@177c6f1a4f863d65ac805cdcb2dcdda76e4f1f03/photos/04ffeac151ac.jpg\nСначала залей все варианты и дождись модерации: python init.py", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-09-07T21:08:58  итог: {"ran_at": "2026-09-07T21:08:46+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-09-07T21:19:50  итог: {"ran_at": "2026-09-07T21:19:36+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}

@@ -4,7 +4,11 @@ __pycache__/
 .venv/
 venv/
 
-# всё рабочее состояние и секреты — только локально
-data/*
-!data/.gitkeep
-report.md
+# секреты — только локально, в облако идут через GitHub Secrets
+data/secrets.json
+data/app.run.log
+data/launchd.out.log
+data/launchd.err.log
+
+# состояние теста (config, snapshots, blocks, results, журнал) коммитится —
+# так облачный прогон продолжает с того же места

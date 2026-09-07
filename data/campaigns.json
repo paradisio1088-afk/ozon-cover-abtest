@@ -1,0 +1,218 @@
+[
+  {
+    "id": "36094586",
+    "title": "купальник",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SKU"
+  },
+  {
+    "id": "31601529",
+    "title": "Гирлянды",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SKU"
+  },
+  {
+    "id": "29370469",
+    "title": "Купальники",
+    "state": "CAMPAIGN_STATE_RUNNING",
+    "type": "SKU"
+  },
+  {
+    "id": "19629922",
+    "title": "Лампа",
+    "state": "CAMPAIGN_STATE_ARCHIVED",
+    "type": "SKU"
+  },
+  {
+    "id": "12708854",
+    "title": "301led",
+    "state": "CAMPAIGN_STATE_ARCHIVED",
+    "type": "SKU"
+  },
+  {
+    "id": "12708830",
+    "title": "s14",
+    "state": "CAMPAIGN_STATE_ARCHIVED",
+    "type": "SKU"
+  },
+  {
+    "id": "11004376",
+    "title": "подушка ортопедическая",
+    "state": "CAMPAIGN_STATE_ARCHIVED",
+    "type": "SKU"
+  },
+  {
+    "id": "6922479",
+    "title": "Пижама женская джунгли",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "6922469",
+    "title": "Пижамы женские (леопардовая)",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "6843409",
+    "title": "гирлянда led 30 ламп 9 метров",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "6828182",
+    "title": "Гирлянда накал",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "6486763",
+    "title": "Продвижение с кешбэком 3 (20.11 – 24.12)",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "5776196",
+    "title": "Продвижение с кешбэком",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "5603148",
+    "title": "Оплата за заказ: выбранные товары",
+    "state": "CAMPAIGN_STATE_RUNNING",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "4716236",
+    "title": "Продвижение с кешбеком",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "4563793",
+    "title": "ваза",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "4251374",
+    "title": "Гирлянда s14",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "4169911",
+    "title": "Тапочки Баския",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "3760306",
+    "title": "Купальник бордовый",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "3731368",
+    "title": "Кепка мужская LA",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "3627234",
+    "title": "Брендовая полка",
+    "state": "CAMPAIGN_STATE_FINISHED",
+    "type": "BRAND_SHELF"
+  },
+  {
+    "id": "3626859",
+    "title": "Брендовая полка",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "BRAND_SHELF"
+  },
+  {
+    "id": "3626536",
+    "title": "Продвижение в поиске",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "3626302",
+    "title": "Баннер",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "BANNER"
+  },
+  {
+    "id": "3032255",
+    "title": "Гирлянды led ",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "2730342",
+    "title": "кресла",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "2730014",
+    "title": "Гирлянды",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "2729909",
+    "title": "Пижамы",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "2052590",
+    "title": "Продвижение в поиске",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "2052578",
+    "title": "Продвижение в поиске",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "1676393",
+    "title": "Продвижение в поиске",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "947184",
+    "title": "Баннер",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "BANNER"
+  },
+  {
+    "id": "947166",
+    "title": "Berlingerr",
+    "state": "CAMPAIGN_STATE_ARCHIVED",
+    "type": "SIS"
+  },
+  {
+    "id": "913820",
+    "title": "Брендовая полка",
+    "state": "CAMPAIGN_STATE_FINISHED",
+    "type": "BRAND_SHELF"
+  },
+  {
+    "id": "758830",
+    "title": "Berlingerr",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  },
+  {
+    "id": "395617",
+    "title": "Продвижение в поиске",
+    "state": "CAMPAIGN_STATE_INACTIVE",
+    "type": "SEARCH_PROMO"
+  }
+]
