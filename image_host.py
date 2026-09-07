@@ -52,12 +52,32 @@ def _repo_info(repo: str, token: str) -> dict:
     return r.json()
 
 
+def _branch_head(repo: str, token: str, branch: str) -> str | None:
+    """SHA коммита в вершине ветки, либо None если репозиторий пустой."""
+    r = requests.get(f"{API}/repos/{repo}/git/ref/heads/{branch}",
+                     headers=_headers(token), timeout=30)
+    return r.json()["object"]["sha"] if r.status_code == 200 else None
+
+
+def _init_repo(repo: str, token: str, branch: str) -> None:
+    """Создаёт первый коммит (README) в пустом репозитории через Git Data API."""
+    h = _headers(token)
+    blob = requests.post(f"{API}/repos/{repo}/git/blobs", headers=h,
+                         json={"content": "# covers\n", "encoding": "utf-8"}, timeout=30).json()
+    tree = requests.post(f"{API}/repos/{repo}/git/trees", headers=h, json={"tree": [
+        {"path": "README.md", "mode": "100644", "type": "blob", "sha": blob["sha"]}]}, timeout=30).json()
+    commit = requests.post(f"{API}/repos/{repo}/git/commits", headers=h,
+                           json={"message": "init", "tree": tree["sha"], "parents": []}, timeout=30).json()
+    requests.post(f"{API}/repos/{repo}/git/refs", headers=h,
+                  json={"ref": f"refs/heads/{branch}", "sha": commit["sha"]}, timeout=30)
+
+
 def check() -> dict:
     repo, token = _repo_token()
     info = _repo_info(repo, token)
-    return {"repo": repo, "private": info.get("private"),
-            "branch": info.get("default_branch", "main"),
-            "empty": info.get("size", 1) == 0}
+    branch = info.get("default_branch", "main")
+    return {"repo": repo, "private": info.get("private"), "branch": branch,
+            "empty": _branch_head(repo, token, branch) is None}
 
 
 def upload_image(data: bytes, filename: str, message: str = "add cover variant") -> dict:
@@ -65,24 +85,20 @@ def upload_image(data: bytes, filename: str, message: str = "add cover variant")
     repo, token = _repo_token()
     info = _repo_info(repo, token)
     branch = info.get("default_branch", "main")
+    if _branch_head(repo, token, branch) is None:      # пустой репозиторий — инициализируем
+        _init_repo(repo, token, branch)
+
     path = f"photos/{filename}"
     url = f"{API}/repos/{repo}/contents/{path}"
-
-    body = {"message": message, "content": base64.b64encode(data).decode()}
-    if info.get("size", 1) != 0:  # непустой репо -> указываем ветку и sha при перезаписи
-        body["branch"] = branch
-        cur = requests.get(url, headers=_headers(token), params={"ref": branch}, timeout=30)
-        if cur.status_code == 200:
-            body["sha"] = cur.json()["sha"]
+    body = {"message": message, "content": base64.b64encode(data).decode(), "branch": branch}
+    cur = requests.get(url, headers=_headers(token), params={"ref": branch}, timeout=30)
+    if cur.status_code == 200:                         # файл уже есть — перезаписываем
+        body["sha"] = cur.json()["sha"]
 
     r = requests.put(url, headers=_headers(token), json=body, timeout=90)
     if r.status_code >= 400:
-        hint = ""
-        if "Repository is empty" in r.text or r.status_code == 409:
-            hint = "\nОткрой репозиторий на GitHub и добавь любой файл (кнопка «Add a README»)."
-        raise SystemExit(f"GitHub upload {r.status_code}: {r.text[:300]}{hint}")
-    res = r.json()
-    commit_sha = res["commit"]["sha"]
+        raise SystemExit(f"GitHub upload {r.status_code}: {r.text[:300]}")
+    commit_sha = r.json()["commit"]["sha"]
     return {"url": f"https://cdn.jsdelivr.net/gh/{repo}@{commit_sha}/photos/{filename}",
             "filename": filename, "commit": commit_sha}
 
