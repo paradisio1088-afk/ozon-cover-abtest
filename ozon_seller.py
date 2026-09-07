@@ -86,19 +86,20 @@ def import_pictures(product_id: int, images: list[str], color_image: str = "") -
 
 
 def set_cover(product_id: int, image_url: str) -> dict:
-    """Ставит image_url первым в списке. Возвращает отчёт о действии."""
+    """Ставит вариант (по похожести на image_url) первым в списке фото карточки."""
+    from image_match import match_url
+
     images, primary = get_images(product_id)
-    known = {_norm(u): u for u in images}
-    match = known.get(_norm(image_url))
+    match = match_url(image_url, images)
     if match is None:
         raise SystemExit(
-            f"Картинки нет в карточке: {image_url}\n"
-            f"Сначала залей все варианты и дождись модерации: python init.py"
+            "Не нашёл этот вариант среди фото карточки. Залей все варианты через "
+            "«Залить фото в карточку» и дождись, пока Ozon их обработает."
         )
-    if _norm(primary) == _norm(match):
+    if match == primary:
         return {"changed": False, "primary": primary, "order": images}
 
-    reordered = [match] + [u for u in images if _norm(u) != _norm(match)]
+    reordered = [match] + [u for u in images if u != match]
     pics = import_pictures(product_id, reordered)
     return {"changed": True, "from": primary, "to": match, "order": reordered, "pictures": pics}
 

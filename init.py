@@ -15,33 +15,33 @@ import time
 
 from abtest import block_order
 from common import load_config
-from ozon_seller import _norm, get_images, import_pictures
+from ozon_seller import get_images, import_pictures
 
 
 def status(cfg: dict) -> tuple[list[str], list[str]]:
+    from image_match import present as _present
     images, _ = get_images(cfg["test"]["product_id"])
-    have = {_norm(u) for u in images}
+    ok = set(_present([v["url"] for v in cfg["variants"]], images))
     present, missing = [], []
     for v in cfg["variants"]:
-        (present if _norm(v["url"]) in have else missing).append(v["url"])
+        (present if v["url"] in ok else missing).append(v["url"])
     return present, missing
 
 
 def upload_missing(cfg: dict) -> None:
+    from image_match import present as _present
     pid = cfg["test"]["product_id"]
     images, primary = get_images(pid)
-    have = {_norm(u) for u in images}
-    to_add = [v["url"] for v in cfg["variants"] if _norm(v["url"]) not in have]
+    have = set(_present([v["url"] for v in cfg["variants"]], images))
+    to_add = [v["url"] for v in cfg["variants"] if v["url"] not in have]
     if not to_add:
         print("Все варианты уже в карточке.")
         return
     # текущую обложку оставляем первой, чтобы не трогать живую карточку до модерации
-    ordered = images + to_add
-    if primary and _norm(primary) in {_norm(u) for u in ordered}:
-        ordered = [primary] + [u for u in ordered if _norm(u) != _norm(primary)]
+    ordered = ([primary] if primary else []) + [u for u in images if u != primary] + to_add
     print(f"Догружаю {len(to_add)} вариант(ов) в карточку {pid}...")
     import_pictures(pid, ordered)
-    print("Отправлено. Модерация фото может занять от нескольких минут до суток.")
+    print("Отправлено. Обработка фото у Ozon — от нескольких минут до суток.")
 
 
 def wait_ready(cfg: dict, timeout_min: int = 180, interval_s: int = 60) -> bool:

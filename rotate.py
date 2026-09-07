@@ -13,7 +13,7 @@ import sys
 from abtest import (block_order, current_block, finish_dt, load_state,
                     record_switch, target_variant)
 from common import load_config, now_msk
-from ozon_seller import _norm, get_images, set_cover
+from ozon_seller import get_images, set_cover
 
 
 def main(argv: list[str]) -> int:
@@ -36,24 +36,23 @@ def main(argv: list[str]) -> int:
 
     vi = target_variant(cfg, now)
     variant = cfg["variants"][vi]
-    _, primary = get_images(pid)
-
-    already = _norm(primary) == _norm(variant["url"])
     print(f"Блок {b + 1}/{total} (цикл {b // cfg['test']['n_variants'] + 1}) — "
           f"нужен вариант «{variant['name']}»")
-    print(f"  сейчас обложка: {primary}")
 
-    if already:
-        print("  уже стоит нужный вариант, ничего не делаю.")
-        return 0
     if dry:
-        print(f"  [dry-run] поставил бы: {variant['url']}")
+        _, primary = get_images(pid)
+        print(f"  сейчас обложка: {primary}\n  [dry-run] поставил бы вариант «{variant['name']}»")
         return 0
 
-    res = set_cover(pid, variant["url"])
-    record_switch(state, block=b, variant_index=vi, image_url=variant["url"],
-                  changed=res["changed"])
-    print(f"  обложка переключена на «{variant['name']}»: {variant['url']}")
+    res = set_cover(pid, variant["url"])   # сам сверяет с текущей обложкой по похожести
+    if res["changed"]:
+        print(f"  обложка переключена на «{variant['name']}»")
+    else:
+        print("  уже стоит нужный вариант.")
+    # фиксируем блок в журнале в любом случае — нужно для окна учёта статистики
+    if not any(s["block"] == b for s in state["switches"]):
+        record_switch(state, block=b, variant_index=vi, image_url=variant["url"],
+                      changed=res["changed"])
     return 0
 
 
