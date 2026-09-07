@@ -1,7 +1,7 @@
 """Конфиг, секреты и работа со временем МСК.
 
 Всё хранится в data/:
-  secrets.json  — ключи Ozon и ImgBB (права 0600, в .gitignore)
+  secrets.json  — ключи Ozon и GitHub (права 0600, в .gitignore)
   config.json   — параметры теста и варианты обложек (можно коммитить)
   state.json    — журнал переключений
 """
@@ -24,7 +24,7 @@ MSK = timezone(timedelta(hours=3))  # Москва, без перехода на
 SECRET_KEYS = [
     "ozon_client_id", "ozon_api_key",
     "perf_client_id", "perf_client_secret",
-    "imgbb_key",
+    "github_repo", "github_token",
 ]
 
 DEFAULT_CONFIG = {
@@ -54,7 +54,7 @@ def load_secrets() -> dict:
     env_map = {
         "ozon_client_id": "OZON_CLIENT_ID", "ozon_api_key": "OZON_API_KEY",
         "perf_client_id": "OZON_PERF_CLIENT_ID", "perf_client_secret": "OZON_PERF_CLIENT_SECRET",
-        "imgbb_key": "IMGBB_KEY",
+        "github_repo": "GITHUB_REPO", "github_token": "GITHUB_TOKEN",
     }
     for k, env in env_map.items():
         if os.environ.get(env):

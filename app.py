@@ -3,7 +3,7 @@
 
   python app.py            # http://127.0.0.1:8765
 
-Ставит ключи, грузит фото на ImgBB и в карточку, запускает тест, показывает отчёт.
+Ставит ключи, грузит фото в GitHub и в карточку, запускает тест, показывает отчёт.
 Фоновая ротация — отдельно через launchd (см. install_service.sh).
 """
 
@@ -38,10 +38,11 @@ def masked_secrets() -> dict:
         "ozon_api_key": show(s.get("ozon_api_key", "")),
         "perf_client_id": s.get("perf_client_id", ""),
         "perf_client_secret": show(s.get("perf_client_secret", "")),
-        "imgbb_key": show(s.get("imgbb_key", "")),
+        "github_repo": s.get("github_repo", ""),
+        "github_token": show(s.get("github_token", "")),
         "has": {k: bool(s.get(k)) for k in
                 ("ozon_client_id", "ozon_api_key", "perf_client_id",
-                 "perf_client_secret", "imgbb_key")},
+                 "perf_client_secret", "github_repo", "github_token")},
     }
 
 
@@ -125,9 +126,9 @@ def act_check(_: dict) -> dict:
         res["perf"] = {"ok": False, "error": str(e)}
     try:
         from image_host import check
-        res["imgbb"] = {"ok": True, **check()}
+        res["github"] = {"ok": True, **check()}
     except (SystemExit, Exception) as e:
-        res["imgbb"] = {"ok": False, "error": str(e)}
+        res["github"] = {"ok": False, "error": str(e)}
     return res
 
 
@@ -158,8 +159,7 @@ def act_photos(body: dict) -> dict:
         fname = make_filename(data, item.get("filename", "cover.jpg"))
         up = upload_image(data, fname, message=f"cover variant {item.get('name','')}")
         variants.append({"name": item.get("name") or f"Вариант {len(variants)+1}",
-                         "url": up["url"], "filename": fname,
-                         "delete_url": up.get("delete_url", "")})
+                         "url": up["url"], "filename": fname})
     cfg = save_config({"variants": variants})
     return {"variants": cfg["variants"]}
 

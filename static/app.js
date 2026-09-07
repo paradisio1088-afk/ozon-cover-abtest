@@ -43,25 +43,26 @@ function renderSecrets() {
   set("s_ozon_api_key", s.ozon_api_key);
   $("s_perf_client_id").value = s.perf_client_id || "";
   set("s_perf_client_secret", s.perf_client_secret);
-  set("s_imgbb_key", s.imgbb_key);
+  $("s_github_repo").value = s.github_repo || "";
+  set("s_github_token", s.github_token);
 }
 
 ["s_ozon_client_id","s_ozon_api_key","s_perf_client_id","s_perf_client_secret",
- "s_imgbb_key"].forEach(id =>
+ "s_github_repo","s_github_token"].forEach(id =>
   $(id).addEventListener("input", () => $(id).dataset.touched = "1"));
 
 async function saveSecrets() {
   const body = {};
   const map = { s_ozon_client_id:"ozon_client_id", s_ozon_api_key:"ozon_api_key",
     s_perf_client_id:"perf_client_id", s_perf_client_secret:"perf_client_secret",
-    s_imgbb_key:"imgbb_key" };
+    s_github_repo:"github_repo", s_github_token:"github_token" };
   for (const [el, key] of Object.entries(map)) {
     const v = $(el).value.trim();
     if (v && !v.includes("•")) body[key] = v;
   }
   try {
     await api("/api/secrets", body);
-    ["s_ozon_api_key","s_perf_client_secret","s_imgbb_key"].forEach(id => {
+    ["s_ozon_api_key","s_perf_client_secret","s_github_token"].forEach(id => {
       $(id).value = ""; delete $(id).dataset.touched;
     });
     await loadState();
@@ -76,12 +77,13 @@ async function checkAll() {
     const { ...r } = await api("/api/check", {});
     const chip = (name, o) => {
       const ok = o && o.ok;
-      const extra = ok ? (o.campaigns != null ? ` (${o.campaigns} кампаний)` : " ✓")
+      const extra = ok ? (o.campaigns != null ? ` (${o.campaigns} кампаний)`
+                          : o.repo ? ` (${o.repo}${o.empty ? ", пустой — добавь README" : ""})` : " ✓")
                        : ": " + (o && o.error || "нет");
       return `<span class="status ${ok?'ok':'err'}">${name}${extra}</span>`;
     };
     $("conn-status").innerHTML =
-      chip("Seller API", r.ozon) + chip("Performance API", r.perf) + chip("ImgBB", r.imgbb);
+      chip("Seller API", r.ozon) + chip("Performance API", r.perf) + chip("GitHub", r.github);
     msg("conn-msg", "", "");
   } catch (e) { msg("conn-msg", e.message, "err"); }
 }
@@ -148,7 +150,7 @@ function fileToB64(f) {
 async function uploadPhotos(replace) {
   const files = [...$("files").files];
   if (!files.length) return msg("photos-msg", "Выберите файлы", "err");
-  msg("photos-msg", `Загружаю ${files.length} фото на ImgBB…`, "info");
+  msg("photos-msg", `Загружаю ${files.length} фото в GitHub…`, "info");
   try {
     const photos = [];
     for (const f of files) photos.push({ name: f.name.replace(/\.[^.]+$/, ""), filename: f.name, data_b64: await fileToB64(f) });

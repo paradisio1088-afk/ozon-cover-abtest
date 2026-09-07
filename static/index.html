@@ -72,11 +72,12 @@
       <div><label>Performance API · Client-Secret</label><input type="password" id="s_perf_client_secret"></div>
     </div>
     <div class="row">
-      <div><label>Ключ ImgBB (для хостинга фото) —
-        <a href="https://api.imgbb.com/" target="_blank">получить</a></label>
-        <input type="password" id="s_imgbb_key" placeholder="32 символа"></div>
-      <div></div>
+      <div><label>GitHub — репозиторий для фото (owner/repo)</label>
+        <input type="text" id="s_github_repo" placeholder="логин/ozon-covers"></div>
+      <div><label>GitHub — токен (classic, scope public_repo)</label>
+        <input type="password" id="s_github_token" placeholder="ghp_…"></div>
     </div>
+    <p class="hint" style="margin:6px 0 0">ImgBB не подошёл — блокирует Россию. GitHub + CDN jsDelivr работают, ссылки постоянные. Как получить — см. README.</p>
     <div class="btnrow">
       <button onclick="saveSecrets()">Сохранить ключи</button>
       <button class="ghost" onclick="checkAll()">Проверить подключение</button>
@@ -113,7 +114,7 @@
 
   <div class="card" id="c-photos">
     <h2>4. Варианты обложки</h2>
-    <p class="hint">До 8 вариантов. Первый в списке — базовый (текущая обложка). Файлы загружаются на ImgBB, ссылку скачивает Ozon.</p>
+    <p class="hint">До 8 вариантов. Первый в списке — базовый (текущая обложка). Файлы загружаются в GitHub и раздаются через CDN, ссылку скачивает Ozon.</p>
     <input type="file" id="files" accept="image/*" multiple>
     <div class="btnrow">
       <button onclick="uploadPhotos(false)">Добавить выбранные</button>
