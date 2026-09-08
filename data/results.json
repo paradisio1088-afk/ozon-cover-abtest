@@ -13,12 +13,12 @@
     {
       "variant_index": 1,
       "variant_name": "стоя",
-      "views": 129,
-      "clicks": 4,
-      "ctr": 0.031007751937984496,
-      "spend": 29.06,
+      "views": 204,
+      "clicks": 5,
+      "ctr": 0.024509803921568627,
+      "spend": 31.58,
       "orders": 0,
-      "blocks": 1
+      "blocks": 2
     },
     {
       "variant_index": 2,
@@ -35,11 +35,11 @@
     {
       "vs": "стоя",
       "vs_index": 1,
-      "diff": 0.009532788602556047,
-      "p_value": 0.6087021549482732,
+      "diff": 0.016030736618971916,
+      "p_value": 0.2871881092838866,
       "ci95": [
-        -0.02392072790094376,
-        0.042986305106055854
+        -0.009942425218882965,
+        0.042003898456826796
       ]
     },
     {
@@ -54,9 +54,9 @@
     }
   ],
   "omnibus": {
-    "chi2": 0.2620691742554998,
+    "chi2": 1.1327566225322614,
     "df": 2,
-    "p_value": 0.8734613272509035
+    "p_value": 0.5732061528654995
   },
   "cycles": [
     0,
@@ -78,14 +78,18 @@
     "0|1": {
       "views": 415,
       "clicks": 20
+    },
+    "1|1": {
+      "views": 75,
+      "clicks": 1
     }
   },
   "significant": false,
   "consistent": true,
   "enough_data": false,
   "winner": null,
-  "needed_views_per_variant": 5958,
-  "total_views": 795,
-  "total_clicks": 31,
-  "updated_at": "2026-09-08T22:59:26+03:00"
+  "needed_views_per_variant": 1921,
+  "total_views": 870,
+  "total_clicks": 32,
+  "updated_at": "2026-09-09T01:23:14+03:00"
 }
