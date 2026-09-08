@@ -27,6 +27,13 @@
       "variant_index": 0,
       "image_url": "https://cdn.jsdelivr.net/gh/paradisio1088-afk/ozon-covers@177c6f1a4f863d65ac805cdcb2dcdda76e4f1f03/photos/04ffeac151ac.jpg",
       "changed": true
+    },
+    {
+      "at_utc": "2026-09-08T19:59:14+00:00",
+      "block": 4,
+      "variant_index": 1,
+      "image_url": "https://cdn.jsdelivr.net/gh/paradisio1088-afk/ozon-covers@bfd3917a507f187ed378f3d84a26f71e71bf30f4/photos/3c70022b498a.jpg",
+      "changed": true
     }
   ],
   "winner_applied": null
