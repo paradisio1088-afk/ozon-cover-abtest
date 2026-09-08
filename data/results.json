@@ -1,6 +1,16 @@
 {
   "ranked": [
     {
+      "variant_index": 1,
+      "variant_name": "стоя",
+      "views": 129,
+      "clicks": 4,
+      "ctr": 0.031007751937984496,
+      "spend": 29.06,
+      "orders": 0,
+      "blocks": 1
+    },
+    {
       "variant_index": 0,
       "variant_name": "шляпа",
       "views": 251,
@@ -9,16 +19,6 @@
       "spend": 30.83,
       "orders": 0,
       "blocks": 1
-    },
-    {
-      "variant_index": 1,
-      "variant_name": "стоя",
-      "views": 0,
-      "clicks": 0,
-      "ctr": 0.0,
-      "spend": 0.0,
-      "orders": 0,
-      "blocks": 0
     },
     {
       "variant_index": 2,
@@ -33,13 +33,13 @@
   ],
   "comparisons": [
     {
-      "vs": "стоя",
-      "vs_index": 1,
-      "diff": 0.0,
-      "p_value": 1.0,
+      "vs": "шляпа",
+      "vs_index": 0,
+      "diff": 0.003119305722845054,
+      "p_value": 0.8636417907969447,
       "ci95": [
-        0.0,
-        0.0
+        -0.0330705703418893,
+        0.03930918178757942
       ]
     },
     {
@@ -54,9 +54,9 @@
     }
   ],
   "omnibus": {
-    "chi2": 0.0,
+    "chi2": 0.029494691708005196,
     "df": 2,
-    "p_value": 0.9961696194324103
+    "p_value": 0.9732572729238725
   },
   "cycles": [
     0
@@ -65,14 +65,18 @@
     "0|0": {
       "views": 251,
       "clicks": 7
+    },
+    "1|0": {
+      "views": 129,
+      "clicks": 4
     }
   },
   "significant": false,
   "consistent": true,
   "enough_data": false,
   "winner": null,
-  "needed_views_per_variant": 0,
-  "total_views": 251,
-  "total_clicks": 7,
-  "updated_at": "2026-09-08T03:02:39+03:00"
+  "needed_views_per_variant": 46110,
+  "total_views": 380,
+  "total_clicks": 11,
+  "updated_at": "2026-09-08T07:29:50+03:00"
 }
