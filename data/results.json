@@ -1,22 +1,22 @@
 {
   "ranked": [
     {
+      "variant_index": 0,
+      "variant_name": "шляпа",
+      "views": 666,
+      "clicks": 27,
+      "ctr": 0.04054054054054054,
+      "spend": 101.72,
+      "orders": 0,
+      "blocks": 2
+    },
+    {
       "variant_index": 1,
       "variant_name": "стоя",
       "views": 129,
       "clicks": 4,
       "ctr": 0.031007751937984496,
       "spend": 29.06,
-      "orders": 0,
-      "blocks": 1
-    },
-    {
-      "variant_index": 0,
-      "variant_name": "шляпа",
-      "views": 251,
-      "clicks": 7,
-      "ctr": 0.027888446215139442,
-      "spend": 30.83,
       "orders": 0,
       "blocks": 1
     },
@@ -33,13 +33,13 @@
   ],
   "comparisons": [
     {
-      "vs": "шляпа",
-      "vs_index": 0,
-      "diff": 0.003119305722845054,
-      "p_value": 0.8636417907969447,
+      "vs": "стоя",
+      "vs_index": 1,
+      "diff": 0.009532788602556047,
+      "p_value": 0.6087021549482732,
       "ci95": [
-        -0.0330705703418893,
-        0.03930918178757942
+        -0.02392072790094376,
+        0.042986305106055854
       ]
     },
     {
@@ -54,12 +54,13 @@
     }
   ],
   "omnibus": {
-    "chi2": 0.029494691708005196,
+    "chi2": 0.2620691742554998,
     "df": 2,
-    "p_value": 0.9732572729238725
+    "p_value": 0.8734613272509035
   },
   "cycles": [
-    0
+    0,
+    1
   ],
   "by_cycle": {
     "0|0": {
@@ -73,14 +74,18 @@
     "2|0": {
       "views": 0,
       "clicks": 0
+    },
+    "0|1": {
+      "views": 415,
+      "clicks": 20
     }
   },
   "significant": false,
   "consistent": true,
   "enough_data": false,
   "winner": null,
-  "needed_views_per_variant": 46110,
-  "total_views": 380,
-  "total_clicks": 11,
-  "updated_at": "2026-09-08T16:21:53+03:00"
+  "needed_views_per_variant": 5958,
+  "total_views": 795,
+  "total_clicks": 31,
+  "updated_at": "2026-09-08T20:18:53+03:00"
 }
