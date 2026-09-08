@@ -28,7 +28,7 @@
       "ctr": 0.0,
       "spend": 0.0,
       "orders": 0,
-      "blocks": 0
+      "blocks": 1
     }
   ],
   "comparisons": [
@@ -69,6 +69,10 @@
     "1|0": {
       "views": 129,
       "clicks": 4
+    },
+    "2|0": {
+      "views": 0,
+      "clicks": 0
     }
   },
   "significant": false,
@@ -78,5 +82,5 @@
   "needed_views_per_variant": 46110,
   "total_views": 380,
   "total_clicks": 11,
-  "updated_at": "2026-09-08T11:59:51+03:00"
+  "updated_at": "2026-09-08T16:21:53+03:00"
 }
