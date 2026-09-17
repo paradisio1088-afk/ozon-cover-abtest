@@ -75,3 +75,5 @@
 2026-09-16T17:22:52  итог: {"ran_at": "2026-09-16T20:22:04+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-09-16T20:17:11  итог: {"ran_at": "2026-09-16T23:16:59+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-09-16T23:05:31  итог: {"ran_at": "2026-09-17T02:04:11+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-09-17T01:23:33  snapshot: Performance API: отчёт не готов за отведённое время
+2026-09-17T01:23:33  итог: {"ran_at": "2026-09-17T04:21:09+03:00", "steps": {"rotate": "ok", "snapshot": "ошибка: Performance API: отчёт не готов за отведённое время", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
