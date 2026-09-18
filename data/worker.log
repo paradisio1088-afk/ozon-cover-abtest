@@ -87,3 +87,4 @@
 2026-09-18T05:13:02  snapshot: Performance API: отчёт не готов за отведённое время
 2026-09-18T05:13:02  итог: {"ran_at": "2026-09-18T08:10:36+03:00", "steps": {"rotate": "ok", "snapshot": "ошибка: Performance API: отчёт не готов за отведённое время", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-09-18T09:42:35  итог: {"ran_at": "2026-09-18T12:42:04+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-09-18T13:50:13  итог: {"ran_at": "2026-09-18T16:49:55+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
