@@ -197,3 +197,4 @@
 2026-10-04T20:26:53  итог: {"ran_at": "2026-10-04T23:26:44+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-10-04T23:23:07  итог: {"ran_at": "2026-10-05T02:22:55+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-10-05T02:10:11  итог: {"ran_at": "2026-10-05T05:09:24+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-10-05T08:56:02  итог: {"ran_at": "2026-10-05T11:55:53+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
