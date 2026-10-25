@@ -392,3 +392,4 @@ requests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='api-performance.oz
 
 2026-10-25T19:00:15  итог: {"ran_at": "2026-10-25T21:59:14+03:00", "steps": {"rotate": "ok", "snapshot": "исключение", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-10-25T21:28:16  итог: {"ran_at": "2026-10-26T00:28:09+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-10-25T23:25:43  итог: {"ran_at": "2026-10-26T02:25:29+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
