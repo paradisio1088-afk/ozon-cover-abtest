@@ -391,3 +391,4 @@ Traceback (most recent call last):
 requests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='api-performance.ozon.ru', port=443): Max retries exceeded with url: /api/client/token (Caused by ConnectTimeoutError(<HTTPSConnection(host='api-performance.ozon.ru', port=443) at 0x7efc2f5abb90>, 'Connection to api-performance.ozon.ru timed out. (connect timeout=30)'))
 
 2026-10-25T19:00:15  итог: {"ran_at": "2026-10-25T21:59:14+03:00", "steps": {"rotate": "ok", "snapshot": "исключение", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-10-25T21:28:16  итог: {"ran_at": "2026-10-26T00:28:09+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
