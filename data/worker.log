@@ -667,3 +667,4 @@ Traceback (most recent call last):
 requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api-performance.ozon.ru', port=443): Read timed out. (read timeout=40)
 
 2026-11-02T18:38:32  итог: {"ran_at": "2026-11-02T21:35:57+03:00", "steps": {"rotate": "ok", "snapshot": "исключение", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-11-03T01:15:49  итог: {"ran_at": "2026-11-03T04:14:28+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
