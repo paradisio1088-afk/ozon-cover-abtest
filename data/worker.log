@@ -712,3 +712,4 @@ requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api-performance.ozon.
 2026-11-13T01:21:22  snapshot: Performance API: отчёт не готов за отведённое время
 2026-11-13T01:21:22  итог: {"ran_at": "2026-11-13T04:18:57+03:00", "steps": {"rotate": "ok", "snapshot": "ошибка: Performance API: отчёт не готов за отведённое время", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-11-13T08:16:25  итог: {"ran_at": "2026-11-13T11:16:13+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-11-13T16:35:34  итог: {"ran_at": "2026-11-13T19:35:26+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
