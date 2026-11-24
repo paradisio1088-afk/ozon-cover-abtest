@@ -752,3 +752,4 @@ requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='api-performance.ozon.
 2026-11-23T11:16:52  итог: {"ran_at": "2026-11-23T14:16:39+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-11-23T22:46:24  итог: {"ran_at": "2026-11-24T01:46:16+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
 2026-11-24T06:34:57  итог: {"ran_at": "2026-11-24T09:34:07+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
+2026-11-24T18:17:41  итог: {"ran_at": "2026-11-24T21:17:27+03:00", "steps": {"rotate": "ok", "snapshot": "ok (2)", "collect": "ok", "analyze": "ok"}, "winner": null, "significant": false}
